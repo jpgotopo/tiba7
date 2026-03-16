@@ -1,0 +1,12 @@
+Analyzing reading_reminder...                                   
+
+  error - The argument type 'CardTheme' can't be assigned to the parameter type 'CardThemeData?'.  - lib\main.dart:37:22 - argument_type_not_assignable
+warning - Unused import: 'package:flutter/foundation.dart' - lib\models\reading_plan.dart:1:8 - unused_import
+   info - Unnecessary braces in a string interpolation - lib\providers\reading_state.dart:44:40 - unnecessary_brace_in_string_interps
+   info - Unnecessary braces in a string interpolation - lib\providers\reading_state.dart:49:40 - unnecessary_brace_in_string_interps
+warning - Unused import: '../services/bible_api_service.dart' - lib\screens\home_screen.dart:4:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\home_screen.dart:26:49 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\home_screen.dart:52:45 - deprecated_member_use
+   info - Unnecessary use of 'toList' in a spread - lib\screens\home_screen.dart:149:30 - unnecessary_to_list_in_spreads
+   info - Don't invoke 'print' in production code - lib\services\bible_api_service.dart:17:7 - avoid_print
+
