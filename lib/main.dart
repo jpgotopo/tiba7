@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/reading_state.dart';
-import 'screens/home_screen.dart';
+
+import 'screens/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,32 +18,37 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Tiba7',
         theme: ThemeData(
+          // Primary color palette matching the logo (Deep Blue / Indigo & Vibrant Orange/Red)
           colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.indigo,
+            seedColor: const Color(0xFF1E3A8A), // Deep Blue
+            secondary: const Color(0xFFEA580C), // Vibrant Orange
+            surface: const Color(0xFFF8FAFC), // Off-white clean background
             brightness: Brightness.light,
           ),
           useMaterial3: true,
+          scaffoldBackgroundColor: const Color(0xFFF8FAFC),
           appBarTheme: const AppBarTheme(
             centerTitle: true,
             elevation: 0,
-            backgroundColor: Colors.indigo,
+            backgroundColor: Colors.transparent, // Transparent to allow gradient background
             foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(24),
-                bottomRight: Radius.circular(24),
-              ),
+            iconTheme: IconThemeData(color: Colors.white),
+            titleTextStyle: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
           cardTheme: CardThemeData(
-            elevation: 2,
+            elevation: 4,
+            shadowColor: const Color(0xFF1E3A8A).withValues(alpha: 0.15),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
             ),
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           ),
         ),
-        home: const HomeScreen(),
+        home: const SplashScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );

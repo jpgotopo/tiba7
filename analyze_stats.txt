@@ -1,0 +1,5 @@
+Analyzing reading_reminder...                                   
+
+  error - The getter 'streak' isn't defined for the type 'ReadingState' - lib\screens\statistics_screen.dart:50:49 - undefined_getter
+   info - Don't invoke 'print' in production code - lib\services\bible_api_service.dart:40:9 - avoid_print
+
