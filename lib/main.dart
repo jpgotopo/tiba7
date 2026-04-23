@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
           appBarTheme: const AppBarTheme(
             centerTitle: true,
             elevation: 0,
-            backgroundColor: Colors.transparent, // Transparent to allow gradient background
+            backgroundColor:
+                Colors.transparent, // Transparent to allow gradient background
             foregroundColor: Colors.white,
             iconTheme: IconThemeData(color: Colors.white),
             titleTextStyle: TextStyle(

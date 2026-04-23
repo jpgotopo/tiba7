@@ -16,10 +16,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Passage type metadata: label, color, icon
   static const List<Map<String, dynamic>> _passageTypes = [
-    {'key': 'PL',  'label': 'PL',  'fullLabel': 'Perjanjian Lama',  'color': Color(0xFF1E3A8A), 'icon': Icons.history_edu},
-    {'key': 'PB',  'label': 'PB',  'fullLabel': 'Perjanjian Baru',  'color': Color(0xFFEA580C), 'icon': Icons.auto_stories},
-    {'key': 'Mzm', 'label': 'Mzm', 'fullLabel': 'Mazmur',           'color': Color(0xFF7C3AED), 'icon': Icons.music_note},
-    {'key': 'Ams', 'label': 'Ams', 'fullLabel': 'Amsal',            'color': Color(0xFF059669), 'icon': Icons.lightbulb_outline},
+    {
+      'key': 'PL',
+      'label': 'PL',
+      'fullLabel': 'Perjanjian Lama',
+      'color': Color(0xFF1E3A8A),
+      'icon': Icons.history_edu,
+    },
+    {
+      'key': 'PB',
+      'label': 'PB',
+      'fullLabel': 'Perjanjian Baru',
+      'color': Color(0xFFEA580C),
+      'icon': Icons.auto_stories,
+    },
+    {
+      'key': 'Mzm',
+      'label': 'Mzm',
+      'fullLabel': 'Mazmur',
+      'color': Color(0xFF7C3AED),
+      'icon': Icons.music_note,
+    },
+    {
+      'key': 'Ams',
+      'label': 'Ams',
+      'fullLabel': 'Amsal',
+      'color': Color(0xFF059669),
+      'icon': Icons.lightbulb_outline,
+    },
   ];
 
   @override
@@ -27,7 +51,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _listScrollController = ScrollController();
     _monthScrollController = ScrollController();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToTodayIfCurrentMonth());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _scrollToTodayIfCurrentMonth(),
+    );
   }
 
   @override
@@ -99,7 +125,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: SafeArea(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
                         child: Row(
                           children: [
                             ClipRRect(
@@ -127,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Text(
                                   'Rencana Bacaan Alkitab',
                                   style: TextStyle(
-                                    color: Colors.white.withValues(alpha: 0.8),
+                                    color: Colors.white.withOpacity(0.8),
                                     fontSize: 12,
                                   ),
                                 ),
@@ -136,15 +165,24 @@ class _HomeScreenState extends State<HomeScreen> {
                             const Spacer(),
                             // Streak chip
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.2),
+                                color: Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.3),
+                                ),
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.local_fire_department, color: Colors.orange, size: 18),
+                                  const Icon(
+                                    Icons.local_fire_department,
+                                    color: Colors.orange,
+                                    size: 18,
+                                  ),
                                   const SizedBox(width: 4),
                                   Text(
                                     '${state.currentStreak}',
@@ -162,10 +200,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  collapseMode: CollapseMode.fade,
-                  title: const Text('Tiba7', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                  collapseMode: CollapseMode.parallax,
+                  title: const Text(
+                    'Tiba7',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   centerTitle: false,
-                  titlePadding: const EdgeInsetsDirectional.only(start: 16, bottom: 14),
+                  titlePadding: const EdgeInsetsDirectional.only(
+                    start: 16,
+                    bottom: 14,
+                  ),
                 ),
               ),
 
@@ -191,7 +239,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 13,
-                                color: isSelected ? Colors.white : const Color(0xFF1E3A8A),
+                                color: isSelected
+                                    ? Colors.white
+                                    : const Color(0xFF1E3A8A),
                               ),
                             ),
                             selected: isSelected,
@@ -203,12 +253,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             selectedColor: const Color(0xFF1E3A8A),
                             backgroundColor: const Color(0xFFF0F4FF),
                             side: BorderSide(
-                              color: isSelected ? const Color(0xFF1E3A8A) : const Color(0xFFCDD5E0),
+                              color: isSelected
+                                  ? const Color(0xFF1E3A8A)
+                                  : const Color(0xFFCDD5E0),
                             ),
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -251,7 +303,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           minHeight: 8,
                           backgroundColor: Colors.grey[200],
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            monthPercent >= 100 ? const Color(0xFF059669) : const Color(0xFF1E3A8A),
+                            monthPercent >= 100
+                                ? const Color(0xFF059669)
+                                : const Color(0xFF1E3A8A),
                           ),
                         ),
                       ),
@@ -282,7 +336,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(width: 4),
                           Text(
                             type['fullLabel'] as String,
-                            style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey[600],
+                            ),
                           ),
                         ],
                       );
@@ -295,20 +352,17 @@ class _HomeScreenState extends State<HomeScreen> {
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(12, 8, 12, 100),
                 sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final day = state.selectedMonth.days[index];
-                      final isToday = isCurrentMonth && day.number == todayDay;
-                      return _DayCard(
-                        day: day,
-                        monthIdx: state.selectedMonthIndex,
-                        isToday: isToday,
-                        state: state,
-                        passageTypes: _passageTypes,
-                      );
-                    },
-                    childCount: state.selectedMonth.days.length,
-                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final day = state.selectedMonth.days[index];
+                    final isToday = isCurrentMonth && day.number == todayDay;
+                    return _DayCard(
+                      day: day,
+                      monthIdx: state.selectedMonthIndex,
+                      isToday: isToday,
+                      state: state,
+                      passageTypes: _passageTypes,
+                    );
+                  }, childCount: state.selectedMonth.days.length),
                 ),
               ),
             ],
@@ -332,7 +386,10 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: const Color(0xFFEA580C),
             foregroundColor: Colors.white,
             icon: const Icon(Icons.today),
-            label: const Text('Hari Ini', style: TextStyle(fontWeight: FontWeight.bold)),
+            label: const Text(
+              'Hari Ini',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             elevation: 4,
           );
         },
@@ -358,10 +415,11 @@ class _DayCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final completedCount = List.generate(day.passages.length, (i) => i)
-        .where((i) => state.isPassageCompleted(monthIdx, day.number, i))
-        .length;
+  Widget build(Context context) {
+    final completedCount = List.generate(
+      day.passages.length,
+      (i) => i,
+    ).where((i) => state.isPassageCompleted(monthIdx, day.number, i)).length;
     final totalPassages = day.passages.length;
     final allDone = completedCount == totalPassages && totalPassages > 0;
     final progress = totalPassages > 0 ? completedCount / totalPassages : 0.0;
@@ -372,13 +430,13 @@ class _DayCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: isToday
             ? Border.all(color: const Color(0xFFEA580C), width: 2)
-            : Border.all(color: Colors.grey.withValues(alpha: 0.15)),
+            : Border.all(color: Colors.grey.withOpacity(0.15)),
         color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: isToday
-                ? const Color(0xFFEA580C).withValues(alpha: 0.08)
-                : Colors.black.withValues(alpha: 0.04),
+                ? const Color(0xFFEA580C).withOpacity(0.08)
+                : Colors.black.withOpacity(0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -388,8 +446,12 @@ class _DayCard extends StatelessWidget {
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           leading: _DayNumberBadge(
             dayNumber: day.number,
             isToday: isToday,
@@ -399,7 +461,9 @@ class _DayCard extends StatelessWidget {
           title: Row(
             children: [
               Text(
-                isToday ? 'Hari ${day.number} — Hari Ini' : 'Hari ${day.number}',
+                isToday
+                    ? 'Hari ${day.number} — Hari Ini'
+                    : 'Hari ${day.number}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -414,9 +478,20 @@ class _DayCard extends StatelessWidget {
                 const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.check_circle, color: Color(0xFF059669), size: 14),
+                    Icon(
+                      Icons.check_circle,
+                      color: Color(0xFF059669),
+                      size: 14,
+                    ),
                     SizedBox(width: 4),
-                    Text('Selesai', style: TextStyle(color: Color(0xFF059669), fontSize: 12, fontWeight: FontWeight.w600)),
+                    Text(
+                      'Selesai',
+                      style: TextStyle(
+                        color: Color(0xFF059669),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ],
                 )
               else
@@ -430,8 +505,14 @@ class _DayCard extends StatelessWidget {
             // Passage list
             ...List.generate(day.passages.length, (passageIdx) {
               final passage = day.passages[passageIdx];
-              final completed = state.isPassageCompleted(monthIdx, day.number, passageIdx);
-              final typeInfo = passageIdx < passageTypes.length ? passageTypes[passageIdx] : passageTypes[0];
+              final completed = state.isPassageCompleted(
+                monthIdx,
+                day.number,
+                passageIdx,
+              );
+              final typeInfo = passageIdx < passageTypes.length
+                  ? passageTypes[passageIdx]
+                  : passageTypes[0];
               final typeColor = typeInfo['color'] as Color;
               final typeIcon = typeInfo['icon'] as IconData;
               final typeKey = typeInfo['key'] as String;
@@ -456,7 +537,10 @@ class _DayCard extends StatelessWidget {
                   );
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   child: Row(
                     children: [
                       // Passage type indicator
@@ -464,7 +548,7 @@ class _DayCard extends StatelessWidget {
                         width: 36,
                         height: 36,
                         decoration: BoxDecoration(
-                          color: typeColor.withValues(alpha: 0.1),
+                          color: typeColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(typeIcon, color: typeColor, size: 18),
@@ -490,9 +574,11 @@ class _DayCard extends StatelessWidget {
                                 color: passage.text.isEmpty
                                     ? Colors.grey[400]
                                     : completed
-                                        ? Colors.grey[500]
-                                        : Colors.black87,
-                                decoration: completed ? TextDecoration.lineThrough : null,
+                                    ? Colors.grey[500]
+                                    : Colors.black87,
+                                decoration: completed
+                                    ? TextDecoration.lineThrough
+                                    : null,
                                 decorationColor: Colors.grey[400],
                               ),
                             ),
@@ -502,17 +588,27 @@ class _DayCard extends StatelessWidget {
                       const SizedBox(width: 8),
                       // Read icon (tap to open)
                       if (passage.text.isNotEmpty)
-                        Icon(Icons.open_in_new, size: 16, color: Colors.grey[400]),
+                        Icon(
+                          Icons.open_in_new,
+                          size: 16,
+                          color: Colors.grey[400],
+                        ),
                       const SizedBox(width: 8),
                       // Checkbox
                       Transform.scale(
                         scale: 1.1,
                         child: Checkbox(
                           value: completed,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                           activeColor: typeColor,
                           side: BorderSide(color: Colors.grey[400]!),
-                          onChanged: (_) => state.togglePassage(monthIdx, day.number, passageIdx),
+                          onChanged: (_) => state.togglePassage(
+                            monthIdx,
+                            day.number,
+                            passageIdx,
+                          ),
                         ),
                       ),
                     ],
@@ -528,11 +624,17 @@ class _DayCard extends StatelessWidget {
                 onPressed: () => state.completeAllForDay(monthIdx, day.number),
                 style: FilledButton.styleFrom(
                   minimumSize: const Size(double.infinity, 44),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  backgroundColor: allDone ? Colors.grey[300] : const Color(0xFF1E3A8A),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  backgroundColor: allDone
+                      ? Colors.grey[300]
+                      : const Color(0xFF1E3A8A),
                   foregroundColor: allDone ? Colors.grey[700] : Colors.white,
                 ),
-                label: Text(allDone ? 'Hapus Semua Tanda' : 'Tandai Semua Selesai'),
+                label: Text(
+                  allDone ? 'Hapus Semua Tanda' : 'Tandai Semua Selesai',
+                ),
               ),
             ),
           ],
@@ -557,7 +659,7 @@ class _DayNumberBadge extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(Context context) {
     Color bgColor;
     Color textColor;
     if (allDone) {
@@ -567,7 +669,7 @@ class _DayNumberBadge extends StatelessWidget {
       bgColor = const Color(0xFFEA580C);
       textColor = Colors.white;
     } else if (progress > 0) {
-      bgColor = const Color(0xFF1E3A8A).withValues(alpha: 0.15);
+      bgColor = const Color(0xFF1E3A8A).withOpacity(0.15);
       textColor = const Color(0xFF1E3A8A);
     } else {
       bgColor = Colors.grey[100]!;
@@ -596,3 +698,4 @@ class _DayNumberBadge extends StatelessWidget {
     );
   }
 }
+
