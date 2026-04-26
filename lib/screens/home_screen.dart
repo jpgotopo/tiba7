@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/reading_state.dart';
+import '../services/daily_verse_service.dart';
 import 'reading_bottom_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,6 +14,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late ScrollController _listScrollController;
   late ScrollController _monthScrollController;
+  String _verseRef = '';
+  String _verseText = '';
+  bool _verseLoading = true;
 
   static const List<Map<String, dynamic>> _passageTypes = [
     {
@@ -53,6 +57,18 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => _scrollToTodayIfCurrentMonth(),
     );
+    _loadDailyVerse();
+  }
+
+  Future<void> _loadDailyVerse() async {
+    final verse = await DailyVerseService().getVerseOfDay();
+    if (mounted) {
+      setState(() {
+        _verseRef = verse.reference;
+        _verseText = verse.text;
+        _verseLoading = false;
+      });
+    }
   }
 
   @override
@@ -302,6 +318,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: _DailyVerseCard(
+                  reference: _verseRef,
+                  text: _verseText,
+                  isLoading: _verseLoading,
                 ),
               ),
               SliverToBoxAdapter(
@@ -617,6 +640,7 @@ class _DayCard extends StatelessWidget {
                 ),
               ),
             ),
+            _NoteField(monthIdx: monthIdx, dayNum: day.number, state: state),
           ],
         ),
       ),
@@ -674,6 +698,258 @@ class _DayNumberBadge extends StatelessWidget {
                 ),
               ),
             ),
+    );
+  }
+}
+
+class _NoteField extends StatefulWidget {
+  final int monthIdx;
+  final int dayNum;
+  final ReadingState state;
+
+  const _NoteField({
+    required this.monthIdx,
+    required this.dayNum,
+    required this.state,
+  });
+
+  @override
+  State<_NoteField> createState() => _NoteFieldState();
+}
+
+class _NoteFieldState extends State<_NoteField> {
+  late TextEditingController _controller;
+  bool _editing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(
+      text: widget.state.getNote(widget.monthIdx, widget.dayNum),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    widget.state.saveNote(widget.monthIdx, widget.dayNum, _controller.text.trim());
+    setState(() => _editing = false);
+    FocusScope.of(context).unfocus();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasNote = _controller.text.isNotEmpty;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.edit_note, size: 16, color: Color(0xFF7C3AED)),
+              const SizedBox(width: 6),
+              Text(
+                'Catatan Pribadi',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const Spacer(),
+              if (!_editing)
+                GestureDetector(
+                  onTap: () => setState(() => _editing = true),
+                  child: Text(
+                    hasNote ? 'Edit' : 'Tambah',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF7C3AED),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          if (_editing)
+            Column(
+              children: [
+                TextField(
+                  controller: _controller,
+                  maxLines: 3,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: 'Tulis refleksi atau catatan untuk hari ini...',
+                    hintStyle: TextStyle(fontSize: 13, color: Colors.grey[400]),
+                    filled: true,
+                    fillColor: const Color(0xFFF3F0FF),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.all(12),
+                  ),
+                  style: const TextStyle(fontSize: 13),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        _controller.text = widget.state.getNote(widget.monthIdx, widget.dayNum);
+                        setState(() => _editing = false);
+                      },
+                      child: const Text('Batal'),
+                    ),
+                    const SizedBox(width: 8),
+                    FilledButton(
+                      onPressed: _save,
+                      style: FilledButton.styleFrom(
+                        backgroundColor: const Color(0xFF7C3AED),
+                      ),
+                      child: const Text('Simpan'),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          else if (hasNote)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF3F0FF),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                _controller.text,
+                style: const TextStyle(fontSize: 13, height: 1.4),
+              ),
+            )
+          else
+            Text(
+              'Belum ada catatan',
+              style: TextStyle(fontSize: 12, color: Colors.grey[400]),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DailyVerseCard extends StatelessWidget {
+  final String reference;
+  final String text;
+  final bool isLoading;
+
+  const _DailyVerseCard({
+    required this.reference,
+    required this.text,
+    required this.isLoading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF1E3A8A), Color(0xFF2D4FA0)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1E3A8A).withValues(alpha: 0.25),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: isLoading
+            ? const SizedBox(
+                height: 60,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white54,
+                    strokeWidth: 2,
+                  ),
+                ),
+              )
+            : text.startsWith('Error') || text.isEmpty
+                ? Row(
+                    children: [
+                      const Icon(Icons.wifi_off, color: Colors.white54, size: 18),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Ayat hari ini tidak tersedia',
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.7),
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.auto_awesome,
+                            color: Color(0xFFEA580C),
+                            size: 14,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Ayat Hari Ini',
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.7),
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                          const Spacer(),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              reference,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        text.length > 200 ? '${text.substring(0, 200)}...' : text,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          height: 1.5,
+                        ),
+                      ),
+                    ],
+                  ),
+      ),
     );
   }
 }

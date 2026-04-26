@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/reading_state.dart';
 import '../services/notification_service.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -187,6 +189,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ),
                               ],
                             ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const _SectionHeader(title: 'Tampilan'),
+                        const SizedBox(height: 8),
+                        Card(
+                          child: Consumer<ReadingState>(
+                            builder: (context, state, _) => SwitchListTile(
+                              title: const Text(
+                                'Mode Gelap',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                              subtitle: const Text('Tampilan gelap untuk malam hari'),
+                              value: state.darkMode,
+                              onChanged: (_) => state.toggleDarkMode(),
+                              activeColor: const Color(0xFF1E3A8A),
+                              secondary: Container(
+                                width: 42,
+                                height: 42,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF1E3A8A).withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  Icons.dark_mode_outlined,
+                                  color: Color(0xFF1E3A8A),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                         if (_enabled)

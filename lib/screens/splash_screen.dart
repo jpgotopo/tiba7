@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'main_navigation_screen.dart';
+import 'onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -38,13 +40,18 @@ class _SplashScreenState extends State<SplashScreen>
 
     _animationController.forward();
 
-    // Navigate to Home after 3 seconds total (2s animation + 1s hold)
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const MainNavigationScreen()),
-        );
-      }
+    Future.delayed(const Duration(seconds: 3), () async {
+      if (!mounted) return;
+      final prefs = await SharedPreferences.getInstance();
+      final onboardingDone = prefs.getBool('onboarding_done') ?? false;
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => onboardingDone
+              ? const MainNavigationScreen()
+              : const OnboardingScreen(),
+        ),
+      );
     });
   }
 

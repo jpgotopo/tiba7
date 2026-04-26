@@ -18,42 +18,73 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => ReadingState(),
-      child: MaterialApp(
-        title: 'Tiba7',
-        theme: ThemeData(
-          // Primary color palette matching the logo (Deep Blue / Indigo & Vibrant Orange/Red)
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF1E3A8A), // Deep Blue
-            secondary: const Color(0xFFEA580C), // Vibrant Orange
-            surface: const Color(0xFFF8FAFC), // Off-white clean background
-            brightness: Brightness.light,
-          ),
-          useMaterial3: true,
-          scaffoldBackgroundColor: const Color(0xFFF8FAFC),
-          appBarTheme: const AppBarTheme(
-            centerTitle: true,
-            elevation: 0,
-            backgroundColor:
-                Colors.transparent, // Transparent to allow gradient background
-            foregroundColor: Colors.white,
-            iconTheme: IconThemeData(color: Colors.white),
-            titleTextStyle: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+      child: Consumer<ReadingState>(
+        builder: (context, state, _) => MaterialApp(
+          title: 'Tiba7',
+          themeMode: state.darkMode ? ThemeMode.dark : ThemeMode.light,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF1E3A8A),
+              secondary: const Color(0xFFEA580C),
+              surface: const Color(0xFFF8FAFC),
+              brightness: Brightness.light,
+            ),
+            useMaterial3: true,
+            scaffoldBackgroundColor: const Color(0xFFF8FAFC),
+            appBarTheme: const AppBarTheme(
+              centerTitle: true,
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              foregroundColor: Colors.white,
+              iconTheme: IconThemeData(color: Colors.white),
+              titleTextStyle: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            cardTheme: CardThemeData(
+              elevation: 4,
+              shadowColor: const Color(0xFF1E3A8A).withValues(alpha: 0.15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             ),
           ),
-          cardTheme: CardThemeData(
-            elevation: 4,
-            shadowColor: const Color(0xFF1E3A8A).withValues(alpha: 0.15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF1E3A8A),
+              secondary: const Color(0xFFEA580C),
+              brightness: Brightness.dark,
             ),
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            useMaterial3: true,
+            scaffoldBackgroundColor: const Color(0xFF0F172A),
+            appBarTheme: const AppBarTheme(
+              centerTitle: true,
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              foregroundColor: Colors.white,
+              iconTheme: IconThemeData(color: Colors.white),
+              titleTextStyle: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            cardTheme: CardThemeData(
+              elevation: 4,
+              color: const Color(0xFF1E293B),
+              shadowColor: Colors.black38,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            ),
           ),
+          home: const SplashScreen(),
+          debugShowCheckedModeBanner: false,
         ),
-        home: const SplashScreen(),
-        debugShowCheckedModeBanner: false,
       ),
     );
   }

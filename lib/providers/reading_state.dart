@@ -6,16 +6,41 @@ import '../data/reading_data.dart';
 
 class ReadingState extends ChangeNotifier {
   int _currentStreak = 0;
+  int _bestStreak = 0;
   int _selectedMonthIndex = 0;
-  Map<String, bool> _completions = {}; // key: 'monthIdx_dayNum_passageIdx'
+  Map<String, bool> _completions = {};
+  Map<String, String> _notes = {}; // key: 'monthIdx_dayNum'
   bool _isLoading = false;
+  bool _darkMode = false;
 
   int get currentStreak => _currentStreak;
+  int get bestStreak => _bestStreak;
   int get selectedMonthIndex => _selectedMonthIndex;
+  bool get darkMode => _darkMode;
   List<MonthData> get months => getReadingPlans();
   MonthData get selectedMonth => months[_selectedMonthIndex];
   Map<String, bool> get completions => _completions;
   bool get isLoading => _isLoading;
+
+  String getNote(int monthIdx, int dayNum) =>
+      _notes['${monthIdx}_$dayNum'] ?? '';
+
+  Future<void> toggleDarkMode() async {
+    _darkMode = !_darkMode;
+    notifyListeners();
+    await _saveData();
+  }
+
+  Future<void> saveNote(int monthIdx, int dayNum, String text) async {
+    final key = '${monthIdx}_$dayNum';
+    if (text.isEmpty) {
+      _notes.remove(key);
+    } else {
+      _notes[key] = text;
+    }
+    notifyListeners();
+    await _saveData();
+  }
 
   int get totalDaysInYear {
     return months.fold(0, (sum, month) => sum + month.days.length);
@@ -71,10 +96,16 @@ class ReadingState extends ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
     _currentStreak = prefs.getInt('currentStreak') ?? 0;
+    _bestStreak = prefs.getInt('bestStreak') ?? 0;
     final completionsStr = prefs.getString('completions');
     if (completionsStr != null) {
       _completions = Map<String, bool>.from(json.decode(completionsStr));
     }
+    final notesStr = prefs.getString('notes');
+    if (notesStr != null) {
+      _notes = Map<String, String>.from(json.decode(notesStr));
+    }
+    _darkMode = prefs.getBool('darkMode') ?? false;
 
     // Default to current month on first load
     final savedMonthIndex = prefs.getInt('selectedMonthIndex');
@@ -92,7 +123,10 @@ class ReadingState extends ChangeNotifier {
   Future<void> _saveData() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('currentStreak', _currentStreak);
+    await prefs.setInt('bestStreak', _bestStreak);
     await prefs.setString('completions', json.encode(_completions));
+    await prefs.setString('notes', json.encode(_notes));
+    await prefs.setBool('darkMode', _darkMode);
     await prefs.setInt('selectedMonthIndex', _selectedMonthIndex);
   }
 
@@ -156,6 +190,7 @@ class ReadingState extends ChangeNotifier {
 
     if (streak != _currentStreak) {
       _currentStreak = streak;
+      if (_currentStreak > _bestStreak) _bestStreak = _currentStreak;
       _saveData();
       notifyListeners();
     }

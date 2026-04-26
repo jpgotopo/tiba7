@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart' show Share;
 import '../providers/reading_state.dart';
 
 class StatisticsScreen extends StatelessWidget {
@@ -29,6 +30,13 @@ class StatisticsScreen extends StatelessWidget {
                 pinned: true,
                 expandedHeight: 110,
                 backgroundColor: const Color(0xFF1E3A8A),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.share_outlined, color: Colors.white),
+                    onPressed: () => _shareProgress(context, state),
+                    tooltip: 'Bagikan progres',
+                  ),
+                ],
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
                     decoration: const BoxDecoration(
@@ -68,6 +76,16 @@ class StatisticsScreen extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: _QuickStatCard(
+                            icon: Icons.emoji_events,
+                            iconColor: const Color(0xFFD97706),
+                            value: '${state.bestStreak}',
+                            label: 'Streak\nTerbaik',
+                            bgColor: const Color(0xFFD97706).withValues(alpha: 0.08),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _QuickStatCard(
                             icon: Icons.menu_book,
                             iconColor: const Color(0xFF1E3A8A),
                             value: '$completedDays',
@@ -75,7 +93,11 @@ class StatisticsScreen extends StatelessWidget {
                             bgColor: const Color(0xFF1E3A8A).withValues(alpha: 0.06),
                           ),
                         ),
-                        const SizedBox(width: 12),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
                         Expanded(
                           child: _QuickStatCard(
                             icon: Icons.auto_stories,
@@ -83,6 +105,26 @@ class StatisticsScreen extends StatelessWidget {
                             value: '$totalPassagesRead',
                             label: 'Bacaan\nDibaca',
                             bgColor: const Color(0xFF7C3AED).withValues(alpha: 0.06),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _QuickStatCard(
+                            icon: Icons.calendar_today,
+                            iconColor: const Color(0xFF059669),
+                            value: '${(state.completionPercentage).toStringAsFixed(0)}%',
+                            label: 'Progress\nTahunan',
+                            bgColor: const Color(0xFF059669).withValues(alpha: 0.06),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _QuickStatCard(
+                            icon: Icons.today,
+                            iconColor: const Color(0xFFEA580C),
+                            value: '${state.completedDaysInCurrentMonth}',
+                            label: 'Hari Ini\nBulan Ini',
+                            bgColor: const Color(0xFFEA580C).withValues(alpha: 0.06),
                           ),
                         ),
                       ],
@@ -127,6 +169,21 @@ class StatisticsScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void _shareProgress(BuildContext context, ReadingState state) {
+    final pct = state.completionPercentage.toStringAsFixed(1);
+    final monthPct = state.currentMonthCompletionPercentage.toStringAsFixed(1);
+    final text = '''📖 Progres Bacaan Alkitab Saya — Tiba7
+
+🔥 Streak saat ini: ${state.currentStreak} hari
+🏆 Streak terbaik: ${state.bestStreak} hari
+✅ Hari selesai: ${state.completedDaysCount} dari ${state.totalDaysInYear} hari
+📅 Progress tahunan: $pct%
+📆 Bulan ini (${state.selectedMonth.name}): $monthPct%
+
+Yuk baca Alkitab setiap hari bersama Tiba7! 🙏''';
+    Share.share(text);
   }
 
   Widget _buildCircularProgressCard(
