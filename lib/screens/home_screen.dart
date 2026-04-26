@@ -14,7 +14,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late ScrollController _listScrollController;
   late ScrollController _monthScrollController;
 
-  // Passage type metadata: label, color, icon
   static const List<Map<String, dynamic>> _passageTypes = [
     {
       'key': 'PL',
@@ -69,7 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final isCurrentMonth = state.selectedMonthIndex == now.month - 1;
     if (!isCurrentMonth) return;
     final todayIndex = now.day - 1;
-    // Each card is approximately 72px tall
     final offset = (todayIndex * 72.0).clamp(0.0, double.infinity);
     if (_listScrollController.hasClients) {
       _listScrollController.animateTo(
@@ -81,7 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _scrollMonthChipIntoView(int index) {
-    // Each chip is approximately 88px wide
     final offset = (index * 88.0) - 40.0;
     if (_monthScrollController.hasClients) {
       _monthScrollController.animateTo(
@@ -109,7 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
           return CustomScrollView(
             controller: _listScrollController,
             slivers: [
-              // ── Gradient Header ─────────────────────────────────────
               SliverAppBar(
                 expandedHeight: 140,
                 pinned: true,
@@ -163,7 +159,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                             const Spacer(),
-                            // Streak chip
                             Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 12,
@@ -216,8 +211,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-
-              // ── Month selector ───────────────────────────────────────
               SliverToBoxAdapter(
                 child: Container(
                   color: Colors.white,
@@ -245,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             selected: isSelected,
-                            onSelected: (_) {
+                            onSelected: (bool _) {
                               state.setSelectedMonth(index);
                               _scrollMonthChipIntoView(index);
                               _listScrollController.jumpTo(0);
@@ -259,14 +252,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ),
                 ),
               ),
-
-              // ── Monthly progress summary ─────────────────────────────
               SliverToBoxAdapter(
                 child: Container(
                   color: Colors.white,
@@ -313,8 +304,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-
-              // ── Legend ───────────────────────────────────────────────
               SliverToBoxAdapter(
                 child: Container(
                   color: const Color(0xFFF8FAFC),
@@ -347,8 +336,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-
-              // ── Day list ─────────────────────────────────────────────
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(12, 8, 12, 100),
                 sliver: SliverList(
@@ -369,7 +356,6 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
       ),
-      // ── FAB: Jump to today ────────────────────────────────────────
       floatingActionButton: Consumer<ReadingState>(
         builder: (context, state, _) {
           final now = DateTime.now();
@@ -398,7 +384,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ── Day Card Widget ───────────────────────────────────────────────────────────
 class _DayCard extends StatelessWidget {
   final dynamic day;
   final int monthIdx;
@@ -415,7 +400,7 @@ class _DayCard extends StatelessWidget {
   });
 
   @override
-  Widget build(Context context) {
+  Widget build(BuildContext context) {
     final completedCount = List.generate(
       day.passages.length,
       (i) => i,
@@ -502,7 +487,6 @@ class _DayCard extends StatelessWidget {
             ],
           ),
           children: [
-            // Passage list
             ...List.generate(day.passages.length, (passageIdx) {
               final passage = day.passages[passageIdx];
               final completed = state.isPassageCompleted(
@@ -543,7 +527,6 @@ class _DayCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      // Passage type indicator
                       Container(
                         width: 36,
                         height: 36,
@@ -586,7 +569,6 @@ class _DayCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      // Read icon (tap to open)
                       if (passage.text.isNotEmpty)
                         Icon(
                           Icons.open_in_new,
@@ -594,7 +576,6 @@ class _DayCard extends StatelessWidget {
                           color: Colors.grey[400],
                         ),
                       const SizedBox(width: 8),
-                      // Checkbox
                       Transform.scale(
                         scale: 1.1,
                         child: Checkbox(
@@ -616,7 +597,6 @@ class _DayCard extends StatelessWidget {
                 ),
               );
             }),
-            // Complete all button
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
               child: FilledButton.icon(
@@ -644,7 +624,6 @@ class _DayCard extends StatelessWidget {
   }
 }
 
-// ── Day Number Badge ──────────────────────────────────────────────────────────
 class _DayNumberBadge extends StatelessWidget {
   final int dayNumber;
   final bool isToday;
@@ -659,7 +638,7 @@ class _DayNumberBadge extends StatelessWidget {
   });
 
   @override
-  Widget build(Context context) {
+  Widget build(BuildContext context) {
     Color bgColor;
     Color textColor;
     if (allDone) {
@@ -698,4 +677,3 @@ class _DayNumberBadge extends StatelessWidget {
     );
   }
 }
-
